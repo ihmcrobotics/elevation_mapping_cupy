@@ -4,18 +4,14 @@ This repo contains:
 - `elevation_map_msgs`: message definitions (ament_cmake).
 - `elevation_mapping_cupy`: GPU-accelerated elevation mapping node (Python, CuPy).
 
-## Supported Surface (Regression-Tested)
+## IHMC Jazzy branch
 
-We intentionally keep the supported surface small and deterministic:
-- PointCloud2 input only (no image/semantic fusion in this repo).
-- One “golden path” bring-up:
-  - Synthetic TF (`map -> base_link`) + synthetic depth-like `PointCloud2`
-  - `elevation_mapping_node.py` publishes `grid_map_msgs/msg/GridMap`
-  - RViz config to verify the map shifts correctly with the robot motion
-- Optional robot-config launch path:
-  - `elevation_mapping.launch.py robot_config:=menzi/base.yaml`
-Legacy multi-modal examples (image/semantic fusion, turtlebot pipelines, etc.) were removed from this branch
-to keep the bring-up scope tight and regression-tested.
+`ihmc-jazzy` extends the preserved upstream `release/jazzy` baseline with
+semantic point-cloud fields and calibrated RGB/semantic image fusion.
+See [IHMC_JAZZY.md](IHMC_JAZZY.md) for the Docker build, configuration,
+provenance and GPU/ROS validation commands.
+
+The core synthetic PointCloud2 demonstration below remains available.
 
 ## Requirements
 
@@ -87,5 +83,4 @@ The suite includes:
 
 ## Not Supported / Disabled
 
-- Image input and semantic fusion: removed from the supported surface.
 - `plane_segmentation/`: disabled by default via `COLCON_IGNORE` (heavy deps, not part of bring-up).

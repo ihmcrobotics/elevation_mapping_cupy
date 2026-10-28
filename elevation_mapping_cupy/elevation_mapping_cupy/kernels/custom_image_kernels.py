@@ -41,8 +41,8 @@ def image_to_map_correspondence_kernel(resolution, width, height, tolerance_z_co
             }
             
             // get current cell position
-            int y0 = i % ${width};
-            int x0 = i / ${width};
+            int x0 = i % ${width};
+            int y0 = i / ${width};
             
             // gridcell 3D point in worldframe TODO reverse x and y
             float p1 = (x0-(${width}/2)) * ${resolution} + center[0];
@@ -116,7 +116,7 @@ def image_to_map_correspondence_kernel(resolution, width, height, tolerance_z_co
                 
                 // check if height is invalid
                 if (is_inside_map(x0,y0)){
-                    int idx = y0 + (x0 * ${width});
+                    int idx = x0 + (y0 * ${width});
                     if (map[get_map_idx(idx, 2)]){
                         float dis = get_l2_distance(x0_c, y0_c, x0, y0);
                         float rayheight = z0 + ( dis / total_dis * delta_z);

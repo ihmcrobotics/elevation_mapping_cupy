@@ -1,14 +1,16 @@
 .. _semantics:
 
-Semantics (Not Supported)
-******************************************************************
+Semantic and image fusion
+=========================
 
-This Jazzy branch does **not** support image/semantic fusion.
+The IHMC ``ihmc-jazzy`` branch supports semantic PointCloud2 fields and
+calibrated image fusion onto valid elevation cells. Images alone do not
+create elevation geometry.
 
-Supported surface:
+Configure ``channels`` for semantic cloud fields or score-image bands.
+Image subscriptions also require a matching CameraInfo topic and TF from
+the optical frame to the map frame. RGB uses ``channels: [rgb]`` with the
+``color`` image fusion rule; semantic scores use ``exponential``.
 
-* PointCloud2 input only
-* GridMap output only
-
-If you need multi-modal elevation mapping (RGB/semantic layers), use a different branch/revision.
-
+See ``IHMC_JAZZY.md`` at the repository root for runnable configuration,
+Docker commands, source provenance and validation details.

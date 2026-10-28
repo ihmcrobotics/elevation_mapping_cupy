@@ -8,12 +8,12 @@ using CuPy kernels.
 
 This Jazzy branch intentionally keeps the supported feature set small and deterministic:
 
-* PointCloud2 input only (no image or semantic fusion).
+* PointCloud2 geometry with optional semantic fields and calibrated image fusion.
 * One regression-tested bring-up path:
 
   * synthetic TF (``map -> base_link``) + synthetic depth-like pointcloud
   * ``elevation_mapping_node.py`` publishes a ``grid_map_msgs/msg/GridMap`` on
     ``/elevation_mapping_node/elevation_map``
 
-If you need multi-modal (RGB/semantic) elevation mapping, use a different branch/repository revision.
+The IHMC ``ihmc-jazzy`` branch restores multi-modal fusion. See ``IHMC_JAZZY.md`` for setup and validation.
 

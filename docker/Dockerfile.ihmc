@@ -1,0 +1,25 @@
+ARG BASE_IMAGE=ihmc-reasoning-hydra:jazzy
+FROM ${BASE_IMAGE}
+USER root
+SHELL ["/bin/bash", "-c"]
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-jazzy-grid-map-msgs ros-jazzy-grid-map-rviz-plugin \
+    ros-jazzy-tf-transformations ros-jazzy-message-filters ros-jazzy-cv-bridge \
+    ros-jazzy-sensor-msgs-py ros-jazzy-rosbag2-storage-mcap \
+    ros-jazzy-ament-cmake-pytest ros-jazzy-launch-testing-ament-cmake \
+    ros-jazzy-launch-testing-ros python3-scipy python3-shapely \
+    python3-ruamel.yaml python3-sklearn && rm -rf /var/lib/apt/lists/*
+RUN python3 -m pip install --no-cache-dir 'numpy<2' 'cupy-cuda12x==13.6.0' 'simple-parsing==0.1.7' ruamel.yaml
+WORKDIR /opt/elevation_ws
+RUN git clone https://github.com/Box-Robotics/ros2_numpy.git src/ros2_numpy && \
+    git -C src/ros2_numpy checkout 1ee0d5b903ea11e440f0b02ccf0e6d1e3124aaa9
+COPY elevation_map_msgs src/elevation_mapping_cupy/elevation_map_msgs
+COPY elevation_mapping_cupy src/elevation_mapping_cupy/elevation_mapping_cupy
+COPY sensor_processing/semantic_sensor src/elevation_mapping_cupy/sensor_processing/semantic_sensor
+RUN source /opt/ros/jazzy/setup.bash && \
+    python3 -m colcon build --symlink-install \
+    --packages-up-to semantic_sensor elevation_mapping_cupy \
+    --cmake-args -DPython3_EXECUTABLE=$(command -v python3) -DBUILD_TESTING=ON
+COPY docker/ihmc_entrypoint.sh /elevation_entrypoint.sh
+ENTRYPOINT ["/elevation_entrypoint.sh"]
+CMD ["ros2", "launch", "elevation_mapping_cupy", "synthetic_depth_demo.launch.py", "launch_rviz:=false"]

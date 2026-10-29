@@ -39,3 +39,14 @@ def test_extrapolation_never_substitutes_latest_pose():
     assert ElevationMappingNode.safe_lookup_transform(node, 'world', 'camera', stamp) is None
     assert calls == [stamp]
     assert warnings
+
+@pytest.mark.parametrize('reverse', [False, True])
+def test_constant_erosion_is_finite(reverse):
+    import cupy as cp
+    from elevation_mapping_cupy.plugins.erosion import Erosion
+    plugin = Erosion(reverse=reverse)
+    data = cp.full((4,4), .25, dtype=cp.float32)
+    plugin.get_layer_data = lambda *args: data
+    with np.errstate(all='raise'):
+        result = plugin(None, [], None, [], None, [])
+    np.testing.assert_allclose(cp.asnumpy(result), .25)

@@ -912,7 +912,9 @@ class ElevationMappingNode(Node):
 def main(args=None) -> None:
     rclpy.init(args=args)
     node = ElevationMappingNode()
-    executor = rclpy.executors.SingleThreadedExecutor()
+    # Map callbacks share the default mutually-exclusive group. TF listeners use
+    # their own reentrant group, so a second worker can keep TF current during GPU work.
+    executor = rclpy.executors.MultiThreadedExecutor(num_threads=2)
     executor.add_node(node)
     try:
         executor.spin()

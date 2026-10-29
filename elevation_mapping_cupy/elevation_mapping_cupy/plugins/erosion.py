@@ -103,6 +103,9 @@ class Erosion(PluginBase):
         # Apply erosion
         layer_min = float(layer_np.min())
         layer_max = float(layer_np.max())
+        if np.isfinite(layer_min) and layer_max == layer_min:
+            # Erosion of a constant layer is unchanged; avoid division by zero.
+            return cp.asarray(1 - layer_np if self.reverse else layer_np)
         layer_np_normalized = ((layer_np - layer_min) * 255 / (layer_max - layer_min)).astype("uint8")
         eroded_map_np = cv.erode(layer_np_normalized, kernel, iterations=self.iterations)
         eroded_map_np = eroded_map_np.astype(np.float32) * (layer_max - layer_min) / 255 + layer_min

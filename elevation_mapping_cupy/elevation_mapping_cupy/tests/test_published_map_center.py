@@ -22,3 +22,20 @@ def test_publish_uses_grid_center(camera):
     assert pose.position.y == -2.
     assert pose.position.z == 0.
     assert pose.orientation.w == 1.
+
+
+def test_extrapolation_never_substitutes_latest_pose():
+    import tf2_ros
+    calls = []
+    warnings = []
+    stamp = Time(sec=123)
+    def lookup(target, source, requested):
+        calls.append(requested)
+        if len(calls) == 1:
+            raise tf2_ros.ExtrapolationException('requested time is not available')
+        return object()  # A latest-pose fallback would incorrectly succeed.
+    node = SimpleNamespace(_tf_buffer=SimpleNamespace(lookup_transform=lookup),
+                           get_logger=lambda: SimpleNamespace(warning=lambda text, **kw: warnings.append(text)))
+    assert ElevationMappingNode.safe_lookup_transform(node, 'world', 'camera', stamp) is None
+    assert calls == [stamp]
+    assert warnings

@@ -762,27 +762,13 @@ class ElevationMappingNode(Node):
                 source_frame,
                 time
             )
-        except tf2_ros.ExtrapolationException:
-            # Time is in the future/past, try with latest available
-            try:
-                return self._tf_buffer.lookup_transform(
-                    target_frame,
-                    source_frame,
-                    rclpy.time.Time()
-                )
-            # NOTE: The second lookup can also throw ExtrapolationException (e.g., TF buffer not populated yet,
-            # or timestamps are discontinuous during sim resets). If we don't catch it here the whole node dies.
-            except (
-                tf2.LookupException,
-                tf2.ConnectivityException,
-                tf2.ExtrapolationException,
-                tf2_ros.ExtrapolationException,
-            ) as e:
-                self.get_logger().warning(
-                    f"Transform from '{source_frame}' to '{target_frame}' not available: {e}",
-                    throttle_duration_sec=5.0
-                )
-                return None
+        except tf2_ros.ExtrapolationException as e:
+            # Never fuse a historical observation with the latest camera pose.
+            # During startup/backlog this can rotate geometry into the wrong yaw.
+            self.get_logger().warning(
+                f"Skipping observation: timestamp-matched transform from '{source_frame}' "
+                f"to '{target_frame}' unavailable: {e}", throttle_duration_sec=5.0)
+            return None
         except tf2.LookupException as e:
             # Frame doesn't exist
             self.get_logger().warning(

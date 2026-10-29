@@ -99,21 +99,26 @@ def image_to_map_correspondence_kernel(resolution, width, height, tolerance_z_co
             
             // bresenham algorithm to iterate over cells in line between camera center and current gridmap cell
             // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-            int dx = abs(x1-x0);
-            int sx = x0 < x1 ? 1 : -1;
-            int dy = -abs(y1 - y0);
-            int sy = y0 < y1 ? 1 : -1;
+            // Camera positions are continuous; Bresenham endpoints must be integers.
+            const int camera_x = (int)floorf(x1);
+            const int camera_y = (int)floorf(y1);
+            int dx = abs(camera_x-x0);
+            int sx = x0 < camera_x ? 1 : -1;
+            int dy = -abs(camera_y-y0);
+            int sy = y0 < camera_y ? 1 : -1;
             int error = dx + dy;
 
             bool is_valid = true;
             
             // iterate over all cells along line
-            while (1){
+            for (int step = 0; step <= ${width} + ${height}; ++step){
                 // assumption we do not need to check the height for camera center cell
-                if (x0 == x1 && y0 == y1){
+                if (x0 == camera_x && y0 == camera_y){
                     break;
                 }
                 
+                // Once the ray leaves the map there are no further occluders.
+                if (!is_inside_map(x0, y0)) break;
                 // check if height is invalid
                 if (is_inside_map(x0,y0)){
                     int idx = x0 + (y0 * ${width});
@@ -131,14 +136,14 @@ def image_to_map_correspondence_kernel(resolution, width, height, tolerance_z_co
                 // computation of next gridcell index in line
                 int e2 = 2 * error;
                 if (e2 >= dy){
-                    if(x0 == x1){
+                    if(x0 == camera_x){
                         break;
                     }
                     error = error + dy;
                     x0 = x0 + sx;
                 }
                 if (e2 <= dx){
-                    if (y0 == y1){
+                    if (y0 == camera_y){
                         break;
                     }
                     error = error + dx;

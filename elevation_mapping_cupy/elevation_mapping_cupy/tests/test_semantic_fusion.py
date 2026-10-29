@@ -45,10 +45,11 @@ def test_semantic_cloud_fuses_publishes_shifts_and_clears(emap):
     assert not bool(cp.any(emap.semantic_map.semantic_map))
 
 
-def test_image_fuses_scores_and_rgb_with_correct_xy_projection(emap):
+@pytest.mark.parametrize("camera_offset", [0.0, 0.037])
+def test_image_fuses_scores_and_rgb_with_correct_xy_projection(emap, camera_offset):
     emap.elevation_map[2, 1:-1, 1:-1] = 1
     rotation = np.diag([1, -1, -1]).astype(np.float32)
-    translation = np.array([0, 0, 2], np.float32)
+    translation = np.array([camera_offset, 0, 2], np.float32)
     k = np.array([[20, 0, 40], [0, 20, 40], [0, 0, 1]], np.float32)
     image = np.tile(np.arange(80, dtype=np.float32) / 80, (80, 1))
     emap.input_image([image], ['person'], rotation, translation, k, np.zeros(5), 'plumb_bob', 80, 80)

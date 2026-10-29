@@ -435,18 +435,11 @@ class ElevationMappingNode(Node):
         actual_map_length = (self._map.cell_n - 2) * self._map.resolution
         gm.info.length_x = actual_map_length
         gm.info.length_y = actual_map_length
-        if self._map_t is not None:
-            gm.info.pose.position.x = self._map_t.x
-            gm.info.pose.position.y = self._map_t.y
-            # grid_map_ros (and our RViz usage) treats GridMap as a horizontal 2.5D surface and ignores pose.z and
-            # pose.orientation. Foxglove's GridMap renderer *does* apply them, which can make the map appear tilted
-            # and shifted in Z when we embed the robot pose here. Keep pose.x/y as the map center in `map_frame`,
-            # but publish a neutral pose for visualization sanity.
-            gm.info.pose.position.z = 0.0
-        else:
-            gm.info.pose.position.x = float(center[0])
-            gm.info.pose.position.y = float(center[1])
-            gm.info.pose.position.z = 0.0
+        # Cells move only in integer-resolution steps. Publishing the continuous
+        # sensor pose here slides every cell between shifts and then snaps it back.
+        gm.info.pose.position.x = float(center[0])
+        gm.info.pose.position.y = float(center[1])
+        gm.info.pose.position.z = 0.0
 
         gm.info.pose.orientation.x = 0.0
         gm.info.pose.orientation.y = 0.0

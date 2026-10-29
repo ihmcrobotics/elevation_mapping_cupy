@@ -53,6 +53,11 @@ if(BUILD_TESTING)
   # These are the PRIMARY regression tests for the axis-swap bug
   # Note: PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 disables the launch_testing pytest plugin
   # which would otherwise try to import the package (triggering cupy import errors)
+  ament_add_pytest_test(test_published_map_center
+    ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/tests/test_published_map_center.py
+    TIMEOUT 60
+    ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+  )
   ament_add_pytest_test(test_map_shifting
     ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/tests/test_map_shifting.py
     TIMEOUT 120

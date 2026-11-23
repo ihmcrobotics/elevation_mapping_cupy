@@ -1,0 +1,160 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elevation Mapping CuPy (ROS 2 Jazzy) &mdash; elevation_mapping_cupy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            elevation_mapping_cupy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/cuda_installation.html">CUDA Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/tutorial.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage/parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/semantics.html">Semantics (Not Supported)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">elevation_mapping_cupy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Elevation Mapping CuPy (ROS 2 Jazzy)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/documentation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="elevation-mapping-cupy-ros-2-jazzy">
+<h1>Elevation Mapping CuPy (ROS 2 Jazzy)<a class="headerlink" href="#elevation-mapping-cupy-ros-2-jazzy" title="Link to this heading"></a></h1>
+<p>This repository contains:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">elevation_map_msgs</span></code>: message/service definitions (ament_cmake).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">elevation_mapping_cupy</span></code>: GPU-accelerated elevation mapping node (Python, CuPy).</p></li>
+</ul>
+<section id="supported-surface-regression-tested">
+<h2>Supported Surface (Regression-Tested)<a class="headerlink" href="#supported-surface-regression-tested" title="Link to this heading"></a></h2>
+<p>This Jazzy branch intentionally keeps the supported surface small and deterministic:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/msg/PointCloud2</span></code> input only.</p></li>
+<li><p>One golden-path bring-up:</p>
+<ul>
+<li><p>synthetic TF (<code class="docutils literal notranslate"><span class="pre">map</span> <span class="pre">-&gt;</span> <span class="pre">base_link</span></code>) + synthetic depth-like pointcloud</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">elevation_mapping_node.py</span></code> publishes <code class="docutils literal notranslate"><span class="pre">grid_map_msgs/msg/GridMap</span></code></p></li>
+<li><p>optional RViz config to visually verify that the map shifts correctly with robot motion</p></li>
+</ul>
+</li>
+</ul>
+<p>Everything under <code class="docutils literal notranslate"><span class="pre">elevation_mapping_cupy/config/experimental</span></code> and
+<code class="docutils literal notranslate"><span class="pre">elevation_mapping_cupy/launch/experimental</span></code> is unverified.</p>
+<p>The legacy plane segmentation stack lives under <code class="docutils literal notranslate"><span class="pre">plane_segmentation/</span></code> but is disabled by default
+(<code class="docutils literal notranslate"><span class="pre">COLCON_IGNORE</span></code>) because it has heavy dependencies and is not part of the supported bring-up path.</p>
+</section>
+<section id="quick-start-docker">
+<h2>Quick Start (Docker)<a class="headerlink" href="#quick-start-docker" title="Link to this heading"></a></h2>
+<p>See the repo-level <code class="docutils literal notranslate"><span class="pre">README.md</span></code> for the exact commands (Docker build, <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code>, <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">test</span></code>,
+and running the synthetic demo).</p>
+</section>
+<section id="citing">
+<h2>Citing<a class="headerlink" href="#citing" title="Link to this heading"></a></h2>
+<p>If you use Elevation Mapping CuPy, please cite:</p>
+<ul class="simple">
+<li><p>Elevation Mapping for Locomotion and Navigation using GPU (<a class="reference external" href="https://arxiv.org/abs/2204.12876">arXiv:2204.12876</a>)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@misc</span><span class="p">{</span><span class="n">mikielevation2022</span><span class="p">,</span>
+    <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.48550</span><span class="o">/</span><span class="n">ARXIV</span><span class="mf">.2204.12876</span><span class="p">},</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Miki</span><span class="p">,</span> <span class="n">Takahiro</span> <span class="ow">and</span> <span class="n">Wellhausen</span><span class="p">,</span> <span class="n">Lorenz</span> <span class="ow">and</span> <span class="n">Grandia</span><span class="p">,</span> <span class="n">Ruben</span> <span class="ow">and</span> <span class="n">Jenelten</span><span class="p">,</span> <span class="n">Fabian</span> <span class="ow">and</span> <span class="n">Homberger</span><span class="p">,</span> <span class="n">Timon</span> <span class="ow">and</span> <span class="n">Hutter</span><span class="p">,</span> <span class="n">Marco</span><span class="p">},</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Elevation</span> <span class="n">Mapping</span> <span class="k">for</span> <span class="n">Locomotion</span> <span class="ow">and</span> <span class="n">Navigation</span> <span class="n">using</span> <span class="n">GPU</span><span class="p">},</span>
+    <span class="n">publisher</span> <span class="o">=</span> <span class="p">{</span><span class="n">International</span> <span class="n">Conference</span> <span class="n">on</span> <span class="n">Intelligent</span> <span class="n">Robots</span> <span class="ow">and</span> <span class="n">Systems</span> <span class="p">(</span><span class="n">IROS</span><span class="p">)},</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2022</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Takahiro Miki, Gian Erni.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

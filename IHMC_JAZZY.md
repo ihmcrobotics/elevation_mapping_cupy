@@ -24,7 +24,7 @@ From this repository root, using the existing Hydra Jazzy image:
 This builds `ihmc-elevation-mapping:jazzy` as a separate image. It installs
 CuPy 13.6.0, simple-parsing, GridMap and ROS dependencies and builds
 `elevation_map_msgs`, `ros2_numpy`, `semantic_sensor` and `elevation_mapping_cupy`.
-Torch/torchvision and CUDA 12.8 are inherited from `ihmc-reasoning-hydra:jazzy`.
+Torch/torchvision and CUDA 13.2 are inherited from `ihmc-scenearchitect:latest`; CuPy is `cupy-cuda13x` to match.
 The ros2_numpy dependency is pinned to its Jazzy commit in the Dockerfile.
 The default command runs the headless synthetic geometry demo on DDS domain 173.
 
